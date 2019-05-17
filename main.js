@@ -1,4 +1,5 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Menu } = require("electron");
+const shell = require("electron").shell;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -28,6 +29,70 @@ function createWindow() {
     win = null;
   });
 }
+
+// MENU CREATION
+const mainMenuTemplate = [
+  // { role: 'appMenu' }
+  ...(process.platform === "darwin"
+    ? [
+        {
+          label: app.getName(),
+          submenu: [
+            { role: "about" },
+            { type: "separator" },
+            { role: "services" },
+            { type: "separator" },
+            { role: "hide" },
+            { role: "hideothers" },
+            { role: "unhide" },
+            { type: "separator" },
+            { role: "quit" }
+          ]
+        }
+      ]
+    : []),
+  {
+    label: "Menu",
+    submenu: [
+      { label: "Adjust Notification Value" },
+      {
+        label: "CoinaMarketCap",
+        click() {
+          // shell is used to open up a web browser
+          shell.openExternal("https://coinmarketcap.com");
+        }
+      },
+      { type: "separator" },
+      {
+        label: "Exit",
+        click() {
+          if (process.platform !== "darwin") {
+            app.quit();
+          }
+          // now, this is a conscious decision choice for making the app feel more 'Apple-y', just close the window instead of closing the app
+          win.close();
+        }
+      }
+    ]
+  }
+  // and adding additional menu options is trivial
+  // {
+  //   label: "Info",
+  //   submenu: [
+  //     { label: "Dummy Item 1" },
+  //     { label: "Dummy Item 2" },
+  //     { label: "Dummy Item 3" },
+  //     { type: "separator" },
+  //     { label: "Dummy Item 4" },
+  //     { label: "Dummy Item 5" },
+  //     { label: "Dummy Item 6" }
+  //   ]
+  // }
+];
+
+var menu = Menu.buildFromTemplate(mainMenuTemplate);
+
+Menu.setApplicationMenu(menu);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
