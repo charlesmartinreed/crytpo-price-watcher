@@ -9,6 +9,7 @@ p.notify {
   margin: 0;
   padding: 20px;
   text-transform: uppercase;
+  /* allows us to drag the window */
   -webkit-app-region: drag;
 }
 
@@ -27,4 +28,10 @@ input {
   cursor: pointer;
   padding: 20px;
   text-decoration: underline;
+}
+
+html,
+body {
+  background: rgba(226, 226, 226, 0.7);
+  height: 100%;
 }
